@@ -18,10 +18,7 @@ get '/todo/:id' do
 end
 
 post '/todo/' do
-  todo = Todo.new
-  todo.description = params[:description]
-  t = todo.save
-  puts todo._id
+  todo = Todo.create!(params)
   status, body = 201, {:url => "/todo/#{todo._id}"}.to_json
 end
 
