@@ -1,5 +1,6 @@
-class User
+class Todo
   include Mongoid::Document
-  field :name
-  field :age
+  field :description
+  field :due_date,  type: Date
+  field :completed?, type: Boolean, default: false
 end

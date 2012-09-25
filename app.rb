@@ -6,9 +6,5 @@ require 'model'
 
 
 get '/' do
-	"Hello world!!"
-	 u = User.new
-	 u.name = 'ema'
-	 u.age = 38
-	 u.save
+	Todo.all.to_json
 end
