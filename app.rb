@@ -3,23 +3,32 @@ require 'sinatra/reloader' if development?
 require './config'
 require './model'
 
+def format(data)
+  if content_type[0] == 'text/xml'
+      data.to_xml
+    else #application/json
+      data.to_json
+  end
+end
+
 before do
   content_type :json
-  #puts request.accept
+  content_type request.accept unless request.accept == '*/*'
 end
 
 get '/todos' do
-	Todo.all.to_json
+	format Todo.all
 end
 
 get '/todo/:id' do
   todo = Todo.find(params[:id])
-  todo.to_json
+  format todo
 end
 
 post '/todo/' do
   todo = Todo.create!(params)
-  status, body = 201, {:url => "/todo/#{todo._id}"}.to_json
+  headers["Location"] = "/todo/#{todo._id}"
+  status 201  
 end
 
 delete '/todo/:id' do
@@ -32,7 +41,8 @@ put '/todo/:id' do
   puts params.to_json
   todo = Todo.find(params[:id])
   todo.update_attributes(description: params[:description], due_date: params[:due_date])
-  status, body = 201, {:url => "/todo/#{todo._id}"}.to_json
+  headers["Location"] = "/todo/#{todo._id}"
+  status 201
 end
 
 
