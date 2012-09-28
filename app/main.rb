@@ -15,7 +15,7 @@ helpers do
   end
 
   def validate_key (key)
-    error 401 unless key == 'rubyrocks'
+    #error 401 unless key == 'rubyrocks'
   end
 end
 
@@ -35,7 +35,6 @@ end
 
 get '/todo/:id' do
   todo = Todo.find(params[:id])
-  #format todo
   serialize todo
 end
 
