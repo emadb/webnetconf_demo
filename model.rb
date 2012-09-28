@@ -13,4 +13,12 @@ class Todo
     todo.save
     todo
   end
+
+  def serialize(format)
+    if format == 'text/xml'
+        super.to_xml
+      else
+        super.to_json
+    end
+  end
 end

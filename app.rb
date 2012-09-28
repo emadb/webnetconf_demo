@@ -4,10 +4,10 @@ require './config'
 require './model'
 
 helpers do
-  def format(data)
+  def serialize(data)
     if content_type[0] == 'text/xml'
         data.to_xml
-      else #application/json
+      else
         data.to_json
     end
   end
@@ -17,25 +17,25 @@ helpers do
   end
 end
 
-before do
-  content_type :json
-  content_type request.accept unless request.accept.include? '*/*'
- 
-  provided_key = env['HTTP_WEBNET_AUTH_KEY']
-  validate_key provided_key
-end
+types = {:json => 'application/json', :xml => 'text/xml'}
 
-after do
-  
+before do
+  #set content type
+  content_type types[:json]
+  content_type types[:xml] unless request.accept.include? types[:xml]
+ 
+  # validate request token
+  validate_key env['HTTP_WEBNET_AUTH_KEY']
 end
 
 get '/todos' do
-	format Todo.all
+	serialize Todo.all
 end
 
 get '/todo/:id' do
   todo = Todo.find(params[:id])
-  format todo
+  #format todo
+  serialize todo
 end
 
 post '/todo/' do
