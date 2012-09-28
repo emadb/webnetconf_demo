@@ -3,17 +3,30 @@ require 'sinatra/reloader' if development?
 require './config'
 require './model'
 
-def format(data)
-  if content_type[0] == 'text/xml'
-      data.to_xml
-    else #application/json
-      data.to_json
+helpers do
+  def format(data)
+    if content_type[0] == 'text/xml'
+        data.to_xml
+      else #application/json
+        data.to_json
+    end
+  end
+
+  def validate_key (key)
+    error 401 unless key == 'rubyrocks'
   end
 end
 
 before do
   content_type :json
-  content_type request.accept unless request.accept == '*/*'
+  content_type request.accept unless request.accept.include? '*/*'
+ 
+  provided_key = env['HTTP_WEBNET_AUTH_KEY']
+  validate_key provided_key
+end
+
+after do
+  
 end
 
 get '/todos' do
@@ -38,7 +51,6 @@ delete '/todo/:id' do
 end
 
 put '/todo/:id' do
-  puts params.to_json
   todo = Todo.find(params[:id])
   todo.update_attributes(description: params[:description], due_date: params[:due_date])
   headers["Location"] = "/todo/#{todo._id}"
