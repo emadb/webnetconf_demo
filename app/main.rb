@@ -1,11 +1,13 @@
 require 'sinatra'
 require 'sinatra/reloader' if development?
-require './config'
+require '../config'
 require './model'
 
 helpers do
-  def serialize(data)
-    if content_type[0] == 'text/xml'
+  CONTENT_TYPES = {:json => 'application/json', :xml => 'text/xml'}
+
+  def serialize (data)
+    if content_type.include? CONTENT_TYPES[:xml]
         data.to_xml
       else
         data.to_json
@@ -17,13 +19,12 @@ helpers do
   end
 end
 
-types = {:json => 'application/json', :xml => 'text/xml'}
 
 before do
   #set content type
-  content_type types[:json]
-  content_type types[:xml] unless request.accept.include? types[:xml]
- 
+  content_type CONTENT_TYPES[:json]
+  content_type CONTENT_TYPES[:xml] if request.accept.include? CONTENT_TYPES[:xml]
+
   # validate request token
   validate_key env['HTTP_WEBNET_AUTH_KEY']
 end
@@ -52,7 +53,7 @@ end
 
 put '/todo/:id' do
   todo = Todo.find(params[:id])
-  todo.update_attributes(description: params[:description], due_date: params[:due_date], completed?: params[:completed?])
+  todo.update_attributes(:description => params[:description], :due_date => params[:due_date], :completed? => params[:completed?])
   headers["Location"] = "/todo/#{todo._id}"
   status 201
 end
