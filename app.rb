@@ -52,7 +52,7 @@ end
 
 put '/todo/:id' do
   todo = Todo.find(params[:id])
-  todo.update_attributes(description: params[:description], due_date: params[:due_date])
+  todo.update_attributes(description: params[:description], due_date: params[:due_date], completed?: params[:completed?])
   headers["Location"] = "/todo/#{todo._id}"
   status 201
 end
