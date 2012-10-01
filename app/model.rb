@@ -1,5 +1,3 @@
-require 'mongoid'
-
 class Todo
   include Mongoid::Document
   field :description

@@ -1,4 +1,5 @@
-require 'mongoid'
+root = ::File.dirname(__FILE__)
+Dir["app/*.rb"].each { |file| require ::File.join( root, file ) }
 
 configure do
   Mongoid.configure do |config|
@@ -7,3 +8,5 @@ configure do
   end
 end
 
+
+run TodoApiDemo

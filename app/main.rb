@@ -1,7 +1,8 @@
-require 'sinatra'
+require 'rubygems'
+Bundler.require
 require 'sinatra/reloader' if development?
-require '../config'
-require './model'
+
+class TodoApiDemo < Sinatra::Base
 
 helpers do
   CONTENT_TYPES = {:json => 'application/json', :xml => 'text/xml'}
@@ -57,4 +58,5 @@ put '/todo/:id' do
   status 201
 end
 
+end
 
