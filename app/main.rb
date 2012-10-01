@@ -31,6 +31,7 @@ before do
 end
 
 get '/todos' do
+  expires 3600, :public, :must_revalidate
 	serialize Todo.all
 end
 
