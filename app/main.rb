@@ -30,6 +30,11 @@ before do
   validate_key env['HTTP_WEBNET_AUTH_KEY']
 end
 
+get '/env' do
+  request.env.map { |e| e.to_s + "\n" }
+end
+
+
 get '/todos' do
   expires 3600, :public, :must_revalidate
 	serialize Todo.all
@@ -49,7 +54,7 @@ end
 delete '/todo/:id' do
   todo = Todo.find(params[:id])
   todo.delete
-  status, body = 204
+  status 204
 end
 
 put '/todo/:id' do
