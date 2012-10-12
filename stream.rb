@@ -13,7 +13,7 @@ end
 
 get '/send/:message' do 
   connections.each do |out|
-    out << "#{Time.now} -> #{params[:message]}" << "\n" 
+    out << "#{Time.now} - #{params[:message]}" << "\n" 
   end
   "Sent #{params[:message]} to all clients." 
 end
